@@ -8,24 +8,39 @@ export default function Livros() {
     <View style={styles.container}>
       <Text style={styles.header}>Gerenciamento de Livros</Text>
 
-      <Pressable style={styles.button} onPress={() => console.log('Exibir acervo')}>
-        <Text style={styles.buttonText}>Exibir Acervo</Text>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/Pagina livros/exibirAcervo')}
+      >
+        <Text style={styles.buttonText}>Exibir acervo</Text>
       </Pressable>
 
-      <Pressable style={styles.button} onPress={() => console.log('Consultar livro por nome')}>
-        <Text style={styles.buttonText}>Consultar Livro</Text>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/Pagina livros/buscarLivroNome')}
+      >
+        <Text style={styles.buttonText}>Buscar livro pelo nome</Text>
       </Pressable>
 
-      <Pressable style={styles.button} onPress={() => console.log('Adicionar livro ao acervo')}>
-        <Text style={styles.buttonText}>Adicionar Livro</Text>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/Pagina livros/adicionarLivro')}
+      >
+        <Text style={styles.buttonText}>Adicionar livro ao acervo</Text>
       </Pressable>
 
-      <Pressable style={styles.button} onPress={() => console.log('Atualizar dados do livro')}>
-        <Text style={styles.buttonText}>Atualizar Livro</Text>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/Pagina livros/atualizarLivro')}
+      >
+        <Text style={styles.buttonText}>Atualizar informações do livro</Text>
       </Pressable>
 
-      <Pressable style={styles.button} onPress={() => console.log('Excluir livro')}>
-        <Text style={styles.buttonText}>Excluir Livro</Text>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/Pagina livros/deletarLivro')}
+      >
+        <Text style={styles.buttonText}>Excluir livro do acervo</Text>
       </Pressable>
 
       <Pressable style={styles.backButton} onPress={() => router.push('/')}>

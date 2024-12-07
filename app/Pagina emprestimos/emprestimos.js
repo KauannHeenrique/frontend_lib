@@ -8,15 +8,24 @@ export default function Emprestimos() {
     <View style={styles.container}>
       <Text style={styles.header}>Gerenciamento de Empréstimos</Text>
 
-      <Pressable style={styles.button} onPress={() => console.log('Exibir empréstimos')}>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/Pagina emprestimos/exibirEmprestimos')}
+      >
         <Text style={styles.buttonText}>Exibir Empréstimos</Text>
       </Pressable>
 
-      <Pressable style={styles.button} onPress={() => console.log('Adicionar empréstimo')}>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/Pagina emprestimos/adicionarEmprestimo')}
+      >
         <Text style={styles.buttonText}>Adicionar Empréstimo</Text>
       </Pressable>
 
-      <Pressable style={styles.button} onPress={() => console.log('Devolução de livro')}>
+      <Pressable
+        style={styles.button}
+        onPress={() => router.push('/Pagina emprestimos/devolucao')}
+      >
         <Text style={styles.buttonText}>Devolução de Livro</Text>
       </Pressable>
 
@@ -28,38 +37,38 @@ export default function Emprestimos() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#f5f5f5',
-      padding: 20,
-    },
-    header: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-    },
-    button: {
-      backgroundColor: '#007BFF',
-      padding: 15,
-      borderRadius: 8,
-      marginVertical: 10,
-      width: '80%',
-      alignItems: 'center',
-    },
-    buttonText: {
-      color: '#fff',
-      fontSize: 18,
-    },
-    backButton: {
-      marginTop: 20,
-      padding: 10,
-      borderWidth: 1,
-      borderColor: '#007BFF',
-    },
-    backButtonText: {
-      color: '#007BFF',
-      fontSize: 16,
-    },
-  });
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    padding: 20,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    padding: 15,
+    borderRadius: 8,
+    marginVertical: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+  },
+  backButton: {
+    marginTop: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#007BFF',
+  },
+  backButtonText: {
+    color: '#007BFF',
+    fontSize: 16,
+  },
+});
