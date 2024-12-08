@@ -19,7 +19,7 @@ export default function Livros() {
         style={styles.button}
         onPress={() => router.push('/Pagina livros/buscarLivroNome')}
       >
-        <Text style={styles.buttonText}>Buscar livro pelo nome</Text>
+        <Text style={styles.buttonText}>Procurar livro</Text>
       </Pressable>
 
       <Pressable

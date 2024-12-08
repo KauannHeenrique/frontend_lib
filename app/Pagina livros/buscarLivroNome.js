@@ -1,17 +1,107 @@
-import { useRouter } from 'expo-router';
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Text, TextInput, View, Pressable, Modal, FlatList } from 'react-native';
+import { useRouter } from 'expo-router';  // Para navegação com o Expo Router
 
-export default function BuscarLivro() {
+export default function ConsultarLivros() {
+  const [tituloLivro, setTituloLivro] = useState('');
+  const [autorLivro, setAutorLivro] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState('');
+  const [livros, setLivros] = useState([]);  // Estado para armazenar a lista de livros encontrados
+  const [modalVisible, setModalVisible] = useState(false);
+
   const router = useRouter();
+
+  const buscarLivros = async () => {
+    if (!tituloLivro && !autorLivro) {
+      setErro('Por favor, preencha ao menos um campo de pesquisa');
+      setModalVisible(true);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`http://localhost:5014/api/Livros/BuscarLivros?titulo=${tituloLivro}&autor=${autorLivro}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const dadosLivros = await response.json();
+        if (dadosLivros.length === 0) {
+          setErro('Nenhum livro encontrado');
+          setModalVisible(true);
+        }
+        setLivros(dadosLivros); // Atualiza a lista de livros com o resultado da consulta
+      } else {
+        throw new Error('Erro ao buscar livros');
+      }
+    } catch (error) {
+      setErro('Ocorreu um erro ao buscar livros');
+      setModalVisible(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.livroItem}>
+      <Text style={styles.livroTitulo}>{item.tituloLivro}</Text>
+      <Text style={styles.livroAutor}>{item.autorLivro}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Buscar livro pelo nome</Text>
+      <Text style={styles.header}>Procurar livro</Text>
 
+      <TextInput
+        style={styles.input}
+        placeholder="Título"
+        value={tituloLivro}
+        onChangeText={setTituloLivro}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Autor"
+        value={autorLivro}
+        onChangeText={setAutorLivro}
+      />
 
-      <Pressable style={styles.backButton} onPress={() => router.push('/Pagina livros/livros')}>
-        <Text style={styles.backButtonText}>Voltar</Text>
+      <Pressable style={styles.button} onPress={buscarLivros} disabled={loading}>
+        <Text style={styles.buttonText}>{loading ? 'Buscando...' : 'Buscar Livro'}</Text>
       </Pressable>
+
+      {/* Exibe os livros encontrados */}
+      <FlatList
+        data={livros}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+        style={styles.listaLivros}
+      />
+
+      <Pressable style={styles.voltarButton} onPress={() => router.back()}>
+        <Text style={styles.buttonText}>Voltar</Text>
+      </Pressable>
+
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>{erro}</Text>
+
+            <Pressable style={styles.modalButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.modalButtonText}>Fechar</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -29,14 +119,80 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  backButton: {
-    marginTop: 20,
+  input: {
+    width: '100%',
     padding: 10,
+    marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#007BFF',
+    borderColor: '#ddd',
+    borderRadius: 8,
   },
-  backButtonText: {
-    color: '#007BFF',
+  button: {
+    padding: 15,
+    backgroundColor: '#007BFF',
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  voltarButton: {
+    padding: 15,
+    backgroundColor: '#FF5733',
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  listaLivros: {
+    width: '100%',
+    marginTop: 20,
+  },
+  livroItem: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  livroTitulo: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  livroAutor: {
+    fontSize: 16,
+    color: '#777',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButton: {
+    padding: 10,
+    backgroundColor: 'red',
+    borderRadius: 8,
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
