@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Pressable, Modal } from 'react-native';
-import { useRouter } from 'expo-router';  // Para navegação com o Expo Router
+import { useRouter } from 'expo-router';
 
 export default function AdicionarLivro() {
   const [tituloLivro, setTituloLivro] = useState('');
@@ -11,12 +11,15 @@ export default function AdicionarLivro() {
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [livroExistente, setLivroExistente] = useState(false);
+  const [idLivroCadastrado, setIdLivroCadastrado] = useState(null);
 
-  const router = useRouter(); 
+  const router = useRouter();
 
+  // Função para verificar se o livro já existe no acervo
   const verificarLivro = async (titulo, autor) => {
     try {
-      const response = await fetch('http://localhost:5014/api/Livros/ExibirAcervo', {
+      const response = await fetch(`http://localhost:5014/api/Livros/BuscarLivroPor?nomeLivro=${titulo}&nomeAutor=${autor}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -25,22 +28,20 @@ export default function AdicionarLivro() {
 
       if (response.ok) {
         const livros = await response.json();
-        const livroExistente = livros.find(
-          (livro) => livro.tituloLivro === titulo && livro.autorLivro === autor
-        );
-
-        return livroExistente !== undefined;
+        return livros;
       } else {
-        throw new Error('Erro ao verificar existência de livros');
+        return null;
       }
     } catch (error) {
       setErro('Ocorreu um erro ao verificar se o livro já existe');
       setModalVisible(true);
-      return false;
+      return null;
     }
   };
 
+  // Função para adicionar o livro
   const AdicionarLivro = async () => {
+    // Verificação de campos vazios
     if (!tituloLivro || !autorLivro || !anoLancamento || !quantidadeDisponivel) {
       setErro('Por favor, preencha todos os campos');
       setModalVisible(true);
@@ -49,54 +50,102 @@ export default function AdicionarLivro() {
 
     setLoading(true);
 
-    const livroExistente = await verificarLivro(tituloLivro, autorLivro);
+    const livrosExistentes = await verificarLivro(tituloLivro, autorLivro);
 
-    if (livroExistente) {
-      setErro('Este livro já consta no acervo');
-      setModalVisible(true);
-      setLoading(false);
-      return;
-    }
+    if (livrosExistentes) {
+      const livroExistente = livrosExistentes.find(
+        (livro) => livro.tituloLivro === tituloLivro && livro.autorLivro === autorLivro
+      );
 
-    const livro = {
-      id: 0, 
-      tituloLivro: tituloLivro,
-      autorLivro: autorLivro,
-      anoLancamento: parseInt(anoLancamento),
-      quantidadeDisponivel: parseInt(quantidadeDisponivel),
-    };
-
-    try {
-      const response = await fetch('http://localhost:5014/api/Livros/AdicionarLivro', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(livro),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setSucesso('Livro adicionado com sucesso!');
+      if (livroExistente) {
+        // Caso o livro com o nome e autor exato já exista
+        setLivroExistente(true);
+        setSucesso('Este livro já está cadastrado no acervo');
         setModalVisible(true);
-
-        setTituloLivro('');
-        setAutorLivro('');
-        setAnoLancamento('');
-        setQuantidadeDisponivel('');
+        setLoading(false);
+        return;
       } else {
-        throw new Error('Erro ao adicionar livro');
+        // Caso o livro tenha o mesmo nome, mas autor diferente
+        const livro = {
+          id: 0, 
+          tituloLivro: tituloLivro,
+          autorLivro: autorLivro,
+          anoLancamento: parseInt(anoLancamento),
+          quantidadeDisponivel: parseInt(quantidadeDisponivel),
+        };
+
+        try {
+          const response = await fetch('http://localhost:5014/api/Livros/AdicionarLivro', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(livro),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setIdLivroCadastrado(data.id); 
+            setSucesso(`Livro cadastrado com sucesso! ID: ${data.id}`);
+            setModalVisible(true);
+            setTituloLivro('');
+            setAutorLivro('');
+            setAnoLancamento('');
+            setQuantidadeDisponivel('');
+          } else {
+            setErro('Ocorreu um erro ao adicionar o livro');
+            setModalVisible(true);
+          }
+        } catch (error) {
+          setErro('Ocorreu um erro ao adicionar o livro');
+          setModalVisible(true);
+        } finally {
+          setLoading(false);
+        }
       }
-    } catch (error) {
-      setErro('Ocorreu um erro ao adicionar o livro');
-      setModalVisible(true);
-    } finally {
-      setLoading(false);
+    } else {
+      // Caso o livro não exista de forma alguma
+      const livro = {
+        id: 0, 
+        tituloLivro: tituloLivro,
+        autorLivro: autorLivro,
+        anoLancamento: parseInt(anoLancamento),
+        quantidadeDisponivel: parseInt(quantidadeDisponivel),
+      };
+
+      try {
+        const response = await fetch('http://localhost:5014/api/Livros/AdicionarLivro', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(livro),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setIdLivroCadastrado(data.id); // Supondo que a API retorne o ID do livro adicionado
+          setSucesso(`Livro cadastrado com sucesso! ID: ${data.id}`);
+          setModalVisible(true);
+          setTituloLivro('');
+          setAutorLivro('');
+          setAnoLancamento('');
+          setQuantidadeDisponivel('');
+        } else {
+          setErro('Ocorreu um erro ao adicionar o livro');
+          setModalVisible(true);
+        }
+      } catch (error) {
+        setErro('Ocorreu um erro ao adicionar o livro');
+        setModalVisible(true);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   const handleVoltar = () => {
-    router.back();  
+    router.back();
   };
 
   return (
@@ -146,28 +195,30 @@ export default function AdicionarLivro() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalText}>{erro || sucesso}</Text>
+            <Text style={styles.modalText}>
+              {livroExistente ? 'Este livro já está cadastrado no acervo' : erro || sucesso}
+            </Text>
 
             <View style={styles.modalButtonContainer}>
-              <Pressable
-                style={[styles.modalButton, styles.updateButton]}
-                onPress={() => {
-                  setModalVisible(false);
-                  router.push(`Pagina livros/atualizarLivro`);
-                }}
-              >
-                <Text style={styles.modalButtonText}>Atualizar Livro</Text>
-              </Pressable>
-
               <Pressable style={styles.modalButton} onPress={() => setModalVisible(false)}>
                 <Text style={styles.modalButtonText}>Fechar</Text>
               </Pressable>
+
+              {livroExistente && (
+                <Pressable
+                  style={[styles.modalButton, styles.updateButton]}
+                  onPress={() => {
+                    setModalVisible(false);
+                    router.push('Pagina livros/atualizarLivro');
+                  }}
+                >
+                  <Text style={styles.modalButtonText}>Atualizar Livro</Text>
+                </Pressable>
+              )}
             </View>
           </View>
         </View>
       </Modal>
-
-
     </View>
   );
 }
@@ -242,13 +293,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   modalButtonContainer: {
-      flexDirection: 'row', 
-      justifyContent: 'space-between', 
-      width: '100%', 
-      marginTop: 10, 
-    },
-    updateButton: {
-      backgroundColor: 'green',
-      marginLeft: 10, 
-    },
-  });
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    width: '100%', 
+    marginTop: 10, 
+  },
+  updateButton: {
+    backgroundColor: 'green',
+    marginLeft: 10, 
+  },
+});

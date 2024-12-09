@@ -21,7 +21,7 @@ export default function ConsultarLivros() {
 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:5014/api/Livros/BuscarLivros?titulo=${tituloLivro}&autor=${autorLivro}`, {
+      const response = await fetch(`http://localhost:5014/api/Livros/BuscarLivroPor?nomeLivro=${tituloLivro}&nomeAutor=${autorLivro}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -74,6 +74,10 @@ export default function ConsultarLivros() {
         <Text style={styles.buttonText}>{loading ? 'Buscando...' : 'Buscar Livro'}</Text>
       </Pressable>
 
+      <Pressable style={styles.voltarButton} onPress={() => router.back()}>
+        <Text style={styles.buttonText}>Voltar</Text>
+      </Pressable>
+
       {/* Exibe os livros encontrados */}
       <FlatList
         data={livros}
@@ -81,10 +85,6 @@ export default function ConsultarLivros() {
         keyExtractor={(item) => item.id.toString()}
         style={styles.listaLivros}
       />
-
-      <Pressable style={styles.voltarButton} onPress={() => router.back()}>
-        <Text style={styles.buttonText}>Voltar</Text>
-      </Pressable>
 
       <Modal
         transparent={true}
@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
+    zIndex: 1,  // Garante que o botão 'Voltar' fique acima do modal
   },
   buttonText: {
     color: '#fff',
@@ -172,6 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 0, // Garante que o modal fique atrás do botão
   },
   modalContainer: {
     backgroundColor: '#fff',
