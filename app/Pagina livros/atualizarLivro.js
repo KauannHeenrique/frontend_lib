@@ -13,7 +13,6 @@ export default function AtualizarLivro() {
   const [sucesso, setSucesso] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Variáveis temporárias para armazenar as informações do livro que serão exibidas no card
   const [livroInfoTemporario, setLivroInfoTemporario] = useState(null);
 
   const router = useRouter();
@@ -23,7 +22,6 @@ export default function AtualizarLivro() {
     setErro('');
     setSucesso('');
   
-    // Limpar dados antigos se livro não for encontrado
     setTituloLivro('');
     setAutorLivro('');
     setAnoLancamento('');
@@ -42,7 +40,6 @@ export default function AtualizarLivro() {
         const livroEncontrado = livros.find((livro) => livro.id.toString() === id);
   
         if (livroEncontrado) {
-          // Armazenar os dados do livro encontrado na variável temporária
           setLivroInfoTemporario({
             titulo: livroEncontrado.tituloLivro,
             autor: livroEncontrado.autorLivro,
@@ -51,9 +48,8 @@ export default function AtualizarLivro() {
           });
           setModalVisible(false);
         } else {
-          // Limpar os dados e mostrar mensagem de erro
           setErro('Por favor, insira um ID válido!');
-          setLivroInfoTemporario(null); // Limpar os dados do livro na tela
+          setLivroInfoTemporario(null); 
           setModalVisible(true);
         }
       } else {
@@ -73,14 +69,12 @@ export default function AtualizarLivro() {
     setErro('');
     setSucesso('');
 
-    // Usar os valores temporários se os campos estiverem vazios
     const novoTitulo = tituloLivro || livroInfoTemporario?.titulo;
     const novoAutor = autorLivro || livroInfoTemporario?.autor;
     const novoAno = anoLancamento || livroInfoTemporario?.ano;
     const novaQuantidade = quantidade || livroInfoTemporario?.quantidade;
 
     try {
-      // Certifique-se de passar a URL correta para o PUT, incluindo o ID do livro
       const response = await fetch(`http://localhost:5014/api/Livros/AtualizarLivro/${id}`, {
         method: 'PUT',
         headers: {
@@ -90,7 +84,7 @@ export default function AtualizarLivro() {
           tituloLivro: novoTitulo,
           autorLivro: novoAutor,
           anoLancamento: novoAno,
-          quantidadeDisponivel: novaQuantidade, // Verifique se o nome do campo corresponde ao esperado na API
+          quantidadeDisponivel: novaQuantidade, 
         }),
       });
 
@@ -119,7 +113,7 @@ export default function AtualizarLivro() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Atualizar Livro</Text>
+      <Text style={styles.header}>Atualizar livro</Text>
 
       <TextInput
         style={styles.input}
@@ -129,7 +123,7 @@ export default function AtualizarLivro() {
       />
 
       <Pressable style={styles.button} onPress={verificarLivro} disabled={loading}>
-        <Text style={styles.buttonText}>
+        <Text style={styles.textoBotao}>
           {loading ? 'Buscando...' : 'Buscar Livro'}
         </Text>
       </Pressable>
@@ -173,15 +167,15 @@ export default function AtualizarLivro() {
           />
 
           <Pressable style={styles.button} onPress={atualizarLivro} disabled={loading}>
-            <Text style={styles.buttonText}>
+            <Text style={styles.textoBotao}>
               {loading ? 'Atualizando...' : 'Salvar Alterações'}
             </Text>
           </Pressable>
         </>
       )}
 
-      <Pressable style={styles.button} onPress={voltarParaInicio}>
-        <Text style={styles.buttonText}>Voltar</Text>
+      <Pressable style={styles.voltarButton} onPress={voltarParaInicio}>
+        <Text style={styles.textoBotao}>Voltar</Text>
       </Pressable>
 
       <Modal
@@ -231,9 +225,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 5,
   },
-  buttonText: {
+  voltarButton: {
+    padding: 15,
+    backgroundColor: '#FF5733',
+    borderRadius: 8,
+    alignItems: 'center',
+    zIndex: 1, 
+    width: '100%',
+    marginTop: 5,
+  },
+  textoBotao: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',

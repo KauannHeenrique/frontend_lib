@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Pressable, Modal, FlatList } from 'react-native';
-import { useRouter } from 'expo-router';  // Para navegação com o Expo Router
+import { useRouter } from 'expo-router';  
 
 export default function ConsultarLivros() {
   const [tituloLivro, setTituloLivro] = useState('');
   const [autorLivro, setAutorLivro] = useState('');
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
-  const [livros, setLivros] = useState([]);  // Estado para armazenar a lista de livros encontrados
+  const [livros, setLivros] = useState([]);  
   const [modalVisible, setModalVisible] = useState(false);
 
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function ConsultarLivros() {
           setErro('Nenhum livro encontrado');
           setModalVisible(true);
         }
-        setLivros(dadosLivros); // Atualiza a lista de livros com o resultado da consulta
+        setLivros(dadosLivros); 
       } else {
         throw new Error('Erro ao buscar livros');
       }
@@ -71,14 +71,13 @@ export default function ConsultarLivros() {
       />
 
       <Pressable style={styles.button} onPress={buscarLivros} disabled={loading}>
-        <Text style={styles.buttonText}>{loading ? 'Buscando...' : 'Buscar Livro'}</Text>
+        <Text style={styles.textoBotao}>{loading ? 'Buscando...' : 'Buscar Livro'}</Text>
       </Pressable>
 
       <Pressable style={styles.voltarButton} onPress={() => router.back()}>
-        <Text style={styles.buttonText}>Voltar</Text>
+        <Text style={styles.textoBotao}>Voltar</Text>
       </Pressable>
 
-      {/* Exibe os livros encontrados */}
       <FlatList
         data={livros}
         renderItem={renderItem}
@@ -141,9 +140,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
-    zIndex: 1,  // Garante que o botão 'Voltar' fique acima do modal
+    zIndex: 1, 
   },
-  buttonText: {
+  textoBotao: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 0, // Garante que o modal fique atrás do botão
+    zIndex: 0,
   },
   modalContainer: {
     backgroundColor: '#fff',

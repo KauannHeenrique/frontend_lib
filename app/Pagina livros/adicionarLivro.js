@@ -39,7 +39,6 @@ export default function AdicionarLivro() {
     }
   };
 
-  // Função para adicionar o livro
   const AdicionarLivro = async () => {
     // Verificação de campos vazios
     if (!tituloLivro || !autorLivro || !anoLancamento || !quantidadeDisponivel) {
@@ -150,7 +149,7 @@ export default function AdicionarLivro() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Adicionar Livro</Text>
+      <Text style={styles.header}>Adicionar livro</Text>
 
       <TextInput
         style={styles.input}
@@ -180,11 +179,11 @@ export default function AdicionarLivro() {
       />
 
       <Pressable style={styles.button} onPress={AdicionarLivro} disabled={loading}>
-        <Text style={styles.buttonText}>{loading ? 'Adicionando...' : 'Adicionar Livro'}</Text>
+        <Text style={styles.textoBotao}>{loading ? 'Adicionando...' : 'Adicionar livro'}</Text>
       </Pressable>
 
       <Pressable style={styles.voltarButton} onPress={handleVoltar}>
-        <Text style={styles.buttonText}>Voltar</Text>
+        <Text style={styles.textoBotao}>Voltar</Text>
       </Pressable>
 
       <Modal
@@ -259,23 +258,25 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  buttonText: {
+  textoBotao: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',  
+    alignItems: 'center',      
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
   modalContainer: {
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
-    width: '80%',
-    alignItems: 'center',
+    width: '80%',  
+    maxWidth: 400, 
+    alignItems: 'center',  
+    justifyContent: 'center', 
   },
   modalText: {
     fontSize: 18,
@@ -286,6 +287,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'red',
     borderRadius: 8,
+    alignItems: "center",
   },
   modalButtonText: {
     color: '#fff',
@@ -294,7 +296,7 @@ const styles = StyleSheet.create({
   },
   modalButtonContainer: {
     flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    justifyContent: 'center', 
     width: '100%', 
     marginTop: 10, 
   },
