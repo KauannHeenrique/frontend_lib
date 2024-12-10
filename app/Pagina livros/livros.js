@@ -6,7 +6,7 @@ export default function Livros() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Gerenciamento de Livros</Text>
+      <Text style={styles.header}>Gerenciamento de livros</Text>
 
       <Pressable
         style={styles.button}

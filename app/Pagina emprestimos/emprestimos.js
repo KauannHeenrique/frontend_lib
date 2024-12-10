@@ -6,7 +6,7 @@ export default function Emprestimos() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Gerenciamento de Empréstimos</Text>
+      <Text style={styles.header}>Gerenciamento de empréstimos</Text>
 
       <Pressable
         style={styles.button}
