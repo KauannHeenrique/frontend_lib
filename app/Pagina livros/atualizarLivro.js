@@ -53,7 +53,7 @@ export default function AtualizarLivro() {
           setModalVisible(true);
         }
       } else {
-        setErro('Erro ao buscar os livros no acervo. Verifique a API.');
+        setErro('Erro interno. Tente novamente mais tarde.');
         setModalVisible(true);
       }
     } catch (error) {

@@ -27,17 +27,18 @@ export default function ConsultarLivros() {
           'Content-Type': 'application/json',
         },
       });
+      console.log(`Oi`);
+      console.log(response);
 
+      if (response.status === 404){
+        setErro('Nenhum livro encontrado');
+        setModalVisible(true);
+      }
+      
       if (response.ok) {
         const dadosLivros = await response.json();
-        if (dadosLivros.length === 0) {
-          setErro('Nenhum livro encontrado');
-          setModalVisible(true);
-        }
         setLivros(dadosLivros); 
-      } else {
-        throw new Error('Erro ao buscar livros');
-      }
+      } 
     } catch (error) {
       setErro('Ocorreu um erro ao buscar livros');
       setModalVisible(true);

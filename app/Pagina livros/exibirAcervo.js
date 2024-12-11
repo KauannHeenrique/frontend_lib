@@ -17,9 +17,16 @@ export default function ExibirAcervo() {
         },
       });
 
-      if (!response.ok) {
+      console.log(response);
+
+      if (response.status === 404) {
+        throw new Error('Nenhum livro encontrado!');
+      }
+
+      else if (!response.ok){
         throw new Error('Erro ao buscar livros');
       }
+
       const textData = await response.text(); 
       const data = JSON.parse(textData);
       console.log(data); 
@@ -70,6 +77,7 @@ export default function ExibirAcervo() {
               </View>
               <Text style={styles.livroTitulo}>{item.tituloLivro}</Text>
               <Text style={styles.livroAutor}>Autor: {item.autorLivro}</Text> 
+              <Text style={styles.livroAutor}>Lançamento: {item.anoLancamento}</Text> 
             </View>
           )}
         />

@@ -73,8 +73,8 @@ export default function ExibirAcervo() {
         />
       )}
 
-      <Pressable style={styles.backButton} onPress={() => router.push('/Pagina locatarios/locatarios')}>
-        <Text style={styles.backButtonText}>Voltar</Text>
+      <Pressable style={styles.botaoVoltar} onPress={() => router.push('/Pagina locatarios/locatarios')}>
+        <Text style={styles.textoVoltar}>Voltar</Text>
       </Pressable>
     </View>
   );
@@ -133,14 +133,17 @@ const styles = StyleSheet.create({
     color: '#333',
     fontStyle: "italic",
   },
-  backButton: {
+  botaoVoltar: {
+    padding: 15,
+    backgroundColor: '#FF5733',
+    borderRadius: 8,
+    alignItems: 'center',
+    zIndex: 1, 
     marginTop: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#007BFF',
   },
-  backButtonText: {
-    color: '#007BFF',
+  textoVoltar: {
+    color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
