@@ -6,7 +6,7 @@ export default function locatarios() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Gerenciamento de Locatários</Text>
+      <Text style={styles.header}>Gerenciamento de locatários</Text>
 
       <Pressable
         style={styles.button}

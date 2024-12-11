@@ -16,8 +16,11 @@ export default function AdicionarLivro() {
 
   const router = useRouter();
 
-  // Função para verificar se o livro já existe no acervo
   const verificarLivro = async (titulo, autor) => {
+    setErro('');
+    setSucesso('');
+    setLivroExistente(false);
+
     try {
       const response = await fetch(`http://localhost:5014/api/Livros/BuscarLivroPor?nomeLivro=${titulo}&nomeAutor=${autor}`, {
         method: 'GET',
@@ -40,7 +43,10 @@ export default function AdicionarLivro() {
   };
 
   const AdicionarLivro = async () => {
-    // Verificação de campos vazios
+    setErro('');
+    setSucesso('');
+    setLivroExistente(false);
+
     if (!tituloLivro || !autorLivro || !anoLancamento || !quantidadeDisponivel) {
       setErro('Por favor, preencha todos os campos');
       setModalVisible(true);
@@ -57,14 +63,12 @@ export default function AdicionarLivro() {
       );
 
       if (livroExistente) {
-        // Caso o livro com o nome e autor exato já exista
         setLivroExistente(true);
         setSucesso('Este livro já está cadastrado no acervo');
         setModalVisible(true);
         setLoading(false);
         return;
       } else {
-        // Caso o livro tenha o mesmo nome, mas autor diferente
         const livro = {
           id: 0, 
           tituloLivro: tituloLivro,
@@ -103,7 +107,6 @@ export default function AdicionarLivro() {
         }
       }
     } else {
-      // Caso o livro não exista de forma alguma
       const livro = {
         id: 0, 
         tituloLivro: tituloLivro,
@@ -123,7 +126,7 @@ export default function AdicionarLivro() {
 
         if (response.ok) {
           const data = await response.json();
-          setIdLivroCadastrado(data.id); // Supondo que a API retorne o ID do livro adicionado
+          setIdLivroCadastrado(data.id); 
           setSucesso(`Livro cadastrado com sucesso! ID: ${data.id}`);
           setModalVisible(true);
           setTituloLivro('');
@@ -187,10 +190,15 @@ export default function AdicionarLivro() {
       </Pressable>
 
       <Modal
-        transparent={true}
-        visible={modalVisible}
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
+          transparent={true}
+          visible={modalVisible}
+          animationType="fade"
+          onRequestClose={() => {
+          setModalVisible(false);
+          setErro('');
+          setSucesso('');
+          setLivroExistente(false);
+          }}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
