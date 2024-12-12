@@ -69,7 +69,7 @@ export default function DevolucaoEmprestimos() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Devolução de Livro</Text>
+      <Text style={styles.header}>Devolução de livro</Text>
 
       <TextInput
         style={styles.input}

@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 export default function HomePage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Livraria Trovão e Baleias</Text>
+      <Text style={styles.header}>Livraria</Text>
       <StatusBar style="auto" />
 
       <Pressable

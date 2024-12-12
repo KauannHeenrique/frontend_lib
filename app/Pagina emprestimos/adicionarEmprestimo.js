@@ -46,7 +46,7 @@ export default function AdicionarEmprestimo() {
       console.log(`livro${idLocatario}`);
   
       if (response.ok) {
-        setSucesso('Empréstimo cadastrado com sucesso!');
+        setSucesso('Empréstimo realizado com sucesso!');
         setIdLivro('');
         setIdLocatario('');
       } 

@@ -10,6 +10,7 @@ export default function AdicionarLocatario() {
   const [sucesso, setSucesso] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [locatarioExistente, setLocatarioExistente] = useState(null);
+  const [idLocatario, setIdLocatario] = useState(null);
 
 
   const router = useRouter();
@@ -29,10 +30,17 @@ export default function AdicionarLocatario() {
   
         if (response.ok) {
           const locatarios = await response.json();
-          return locatarios;
-        } else {
-          return null;
-        }
+
+          const locatarioExistente = locatarios.find(
+            (locatario) => locatario.nomeLocatario === nomeLocatario && locatario.anoNascimento === parseInt(anoNascimento)
+          );
+    
+          if (locatarioExistente) {
+            return locatarioExistente.id;
+          }
+
+        } 
+
       } catch (error) {
         setErro('Ocorreu um erro ao verificar se o locatário já existe!');
         setModalVisible(true);
@@ -46,28 +54,27 @@ export default function AdicionarLocatario() {
       setLocatarioExistente(false);
   
       if (!nomeLocatario || !anoNascimento) {
-        setErro('Por favor, preencha todos os campos');
+        setErro('Por favor, preencha todos os campos!');
         setModalVisible(true);
         return;
       }
   
       setLoading(true);
-  
+
+      const locatarioExistenteId = await verificarLocatario(nomeLocatario, anoNascimento);
       const locatariosExistentes = await verificarLocatario(nomeLocatario, anoNascimento);
+
+      if (locatarioExistenteId) {
+        setLocatarioExistente(true);
+        setIdLocatario(locatarioExistenteId);
+        setSucesso(`Locatário já cadastrado! ID: ${locatarioExistenteId}`);
+        setModalVisible(true);
+        setLoading(false);
+        return;
+      }
   
-      if (locatariosExistentes) {
-        const locatarioExistente = locatariosExistentes.find(
-          (locatario) => locatario.nomeLocatario === nomeLocatario 
-          && locatario.anoNascimento === parseInt(anoNascimento)
-        );
-  
-        if (locatarioExistente) {
-          setLocatarioExistente(true);
-          setSucesso('Este locatário já está cadastrado!');
-          setModalVisible(true);
-          setLoading(false);
-          return;
-        } else {
+      
+      if (!locatariosExistentes){
           const locatario = {
             id: 0, 
             nomeLocatario: nomeLocatario,
@@ -85,7 +92,6 @@ export default function AdicionarLocatario() {
   
             if (response.ok) {
               const data = await response.json();
-              setLocatarioExistente(data.locatario.id); 
               setSucesso(`Locatário cadastrado com sucesso! ID: ${data.locatario.id}`);
               setModalVisible(true);
               setNomeLocatario('');
@@ -101,41 +107,7 @@ export default function AdicionarLocatario() {
             setLoading(false);
           }
         }
-      } else {
-        const locatario = {
-          id: 0, 
-          nomeLocatario: nomeLocatario,
-          anoNascimento: parseInt(anoNascimento),
-        };
-  
-        try {
-          const response = await fetch('http://localhost:5014/api/Locatarios/AdicionarLocatario', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(locatario),
-          });
-  
-          if (response.ok) {
-            const data = await response.json();
-            setLocatarioExistente(data.id); 
-            setSucesso(`Locatário cadastrado com sucesso! ID: ${data.id}`);
-            setModalVisible(true);
-            setNomeLocatario('');
-            setAnoNascimento('');
-          } else {
-            setErro('Ocorreu um erro ao cadastrar o locatário!');
-            setModalVisible(true);
-          }
-        } catch (error) {
-          setErro('Ocorreu um erro ao cadastrar o locatário!');
-          setModalVisible(true);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
+      }; 
   
     const handleVoltar = () => {
       router.back();
@@ -180,7 +152,7 @@ export default function AdicionarLocatario() {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContainer}>
               <Text style={styles.modalText}>
-                {locatarioExistente ? 'Este locatário já está cadastrado' : erro || sucesso}
+                {locatarioExistente ? `Este locatário já está cadastrado! ID: ${idLocatario}` : erro || sucesso}
               </Text>
   
               <View style={styles.modalButtonContainer}>

@@ -32,9 +32,8 @@ export default function AdicionarLivro() {
       if (response.ok) {
         const livros = await response.json();
         return livros;
-      } else {
-        return null;
-      }
+      } 
+
     } catch (error) {
       setErro('Ocorreu um erro ao verificar se o livro já existe');
       setModalVisible(true);
@@ -64,49 +63,13 @@ export default function AdicionarLivro() {
 
       if (livroExistente) {
         setLivroExistente(true);
-        setSucesso('Este livro já está cadastrado no acervo');
         setModalVisible(true);
         setLoading(false);
         return;
-      } else {
-        const livro = {
-          id: 0, 
-          tituloLivro: tituloLivro,
-          autorLivro: autorLivro,
-          anoLancamento: parseInt(anoLancamento),
-          quantidadeDisponivel: parseInt(quantidadeDisponivel),
-        };
+      } 
+    } 
 
-        try {
-          const response = await fetch('http://localhost:5014/api/Livros/AdicionarLivro', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(livro),
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setIdLivroCadastrado(data.id); 
-            setSucesso(`Livro cadastrado com sucesso! ID: ${data.id}`);
-            setModalVisible(true);
-            setTituloLivro('');
-            setAutorLivro('');
-            setAnoLancamento('');
-            setQuantidadeDisponivel('');
-          } else {
-            setErro('Ocorreu um erro ao adicionar o livro');
-            setModalVisible(true);
-          }
-        } catch (error) {
-          setErro('Ocorreu um erro ao adicionar o livro');
-          setModalVisible(true);
-        } finally {
-          setLoading(false);
-        }
-      }
-    } else {
+    if (!livrosExistentes){
       const livro = {
         id: 0, 
         tituloLivro: tituloLivro,
@@ -126,8 +89,8 @@ export default function AdicionarLivro() {
 
         if (response.ok) {
           const data = await response.json();
-          setIdLivroCadastrado(data.id); 
-          setSucesso(`Livro cadastrado com sucesso! ID: ${data.id}`);
+          setIdLivroCadastrado(data.livro.id); 
+          setSucesso(`Livro cadastrado com sucesso! ID: ${data.livro.id}`);
           setModalVisible(true);
           setTituloLivro('');
           setAutorLivro('');
@@ -203,7 +166,7 @@ export default function AdicionarLivro() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalText}>
-              {livroExistente ? 'Este livro já está cadastrado no acervo' : erro || sucesso}
+              {livroExistente ? `Este livro já está cadastrado no acervo!` : erro || sucesso}
             </Text>
 
             <View style={styles.modalButtonContainer}>
