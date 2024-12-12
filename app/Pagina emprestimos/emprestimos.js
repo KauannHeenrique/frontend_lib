@@ -29,8 +29,8 @@ export default function Emprestimos() {
         <Text style={styles.buttonText}>Devolução de Livro</Text>
       </Pressable>
 
-      <Pressable style={styles.backButton} onPress={() => router.push('/')}>
-        <Text style={styles.backButtonText}>Voltar</Text>
+      <Pressable style={styles.voltarButton} onPress={() => router.push('/')}>
+        <Text style={styles.textoVoltar}>Voltar</Text>
       </Pressable>
     </View>
   );
@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: "center",
   },
   button: {
     backgroundColor: '#007BFF',
@@ -61,14 +62,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
-  backButton: {
+  voltarButton: {
+    padding: 15,
+    backgroundColor: '#FF5733',
+    borderRadius: 8,
+    alignItems: 'center',
+    zIndex: 1, 
     marginTop: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#007BFF',
   },
-  backButtonText: {
-    color: '#007BFF',
+  textoVoltar: {
+    color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });

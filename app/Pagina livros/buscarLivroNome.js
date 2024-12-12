@@ -39,6 +39,7 @@ export default function ConsultarLivros() {
         const dadosLivros = await response.json();
         setLivros(dadosLivros); 
       } 
+      
     } catch (error) {
       setErro('Ocorreu um erro ao buscar livros');
       setModalVisible(true);
@@ -49,8 +50,13 @@ export default function ConsultarLivros() {
 
   const renderItem = ({ item }) => (
     <View style={styles.livroItem}>
+      <View style={styles.livroHeader}>
+        <Text style={styles.livroId}>ID {item.id}</Text>
+        <Text style={styles.livroQuantidade}>Qtd: {item.quantidadeDisponivel}</Text>
+      </View>
       <Text style={styles.livroTitulo}>{item.tituloLivro}</Text>
-      <Text style={styles.livroAutor}>{item.autorLivro}</Text>
+      <Text style={styles.livroAutor}>Autor: {item.autorLivro}</Text>
+      <Text style={styles.livroAutor}>Lançamento: {item.anoLancamento}</Text>
     </View>
   );
 
@@ -165,8 +171,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   livroAutor: {
+    fontSize: 12,
+    fontWeight: '450',
+    color: '#333',
+    fontStyle: "italic",
+  },
+  livroHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  livroId: {
+    backgroundColor: 'black',
+    color: '#fff',
+    padding: 5,
+    borderRadius: 5,
     fontSize: 16,
-    color: '#777',
+    fontWeight: 'bold',
+  },
+  livroQuantidade: {
+    backgroundColor: 'black',
+    color: '#fff',
+    padding: 5,
+    borderRadius: 5,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   modalOverlay: {
     flex: 1,

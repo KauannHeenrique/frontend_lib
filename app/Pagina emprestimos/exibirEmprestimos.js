@@ -79,8 +79,8 @@ export default function ExibirEmprestimos() {
         />
       )}
 
-      <Pressable style={styles.backButton} onPress={() => router.push('/Pagina emprestimos/emprestimos')}>
-        <Text style={styles.backButtonText}>Voltar</Text>
+      <Pressable style={styles.voltarButton} onPress={() => router.push('/Pagina emprestimos/emprestimos')}>
+        <Text style={styles.textoVoltar}>Voltar</Text>
       </Pressable>
     </View>
   );
@@ -139,14 +139,17 @@ const styles = StyleSheet.create({
     color: '#333',
     fontStyle: "italic",
   },
-  backButton: {
+  voltarButton: {
+    padding: 15,
+    backgroundColor: '#FF5733',
+    borderRadius: 8,
+    alignItems: 'center',
+    zIndex: 1, 
     marginTop: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#007BFF',
   },
-  backButtonText: {
-    color: '#007BFF',
+  textoVoltar: {
+    color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
